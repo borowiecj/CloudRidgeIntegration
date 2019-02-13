@@ -12,7 +12,7 @@
 <body>
 <h2>Items in Facebike</h2>
 	<c:forEach items="${list}" var="item">
-	 <h2>${item.Full Name} </h2>
+	 <h2><c:out value="${item}" /> </h2>
 	</c:forEach>
 </body>
 </html>

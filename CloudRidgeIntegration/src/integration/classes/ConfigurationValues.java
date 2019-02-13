@@ -4,7 +4,7 @@ public class ConfigurationValues
 {
 	public enum ConnectionType
 	{
-		jbdc
+		jdbc
 	}
 	
 	public enum ConfigValues

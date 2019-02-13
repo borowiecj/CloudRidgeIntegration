@@ -15,5 +15,8 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="lib/sqljdbc42.jar"/>
+	<classpathentry kind="lib" path="lib/sqljdbc41.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/sqljdbc41.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/sqljdbc42.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

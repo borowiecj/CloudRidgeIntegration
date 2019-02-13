@@ -3,6 +3,8 @@ package integration.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,12 +41,15 @@ public class Controller extends HttpServlet {
 			
 			ResultSet rs = fb.ReturnTopTen();
 			
+			List list = new LinkedList();
+			
 			while(rs.next())
 			{
-				System.out.println(rs.getString("Full Name"));
+				list.add(rs.getString("Full Name"));
 			}
 			
-			request.setAttribute("list", rs);
+		
+			request.setAttribute("list", list);
 			request.getRequestDispatcher("/WEB-INF/ViewFaceBike.jsp").forward(request, response);
 			
 		}
