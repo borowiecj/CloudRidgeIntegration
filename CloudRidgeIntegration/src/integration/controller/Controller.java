@@ -3,6 +3,7 @@ package integration.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import integration.classes.FaceBikeSQL;
 import integration.classes.FaceBike;
 
 /**
@@ -37,16 +39,18 @@ public class Controller extends HttpServlet {
 		{
 			PrintWriter out = response.getWriter();
 			out.write("<html><head><title>Testing</title></head></html>");
-			FaceBike fb = new FaceBike();	
 			
-			ResultSet rs = fb.ReturnTopTen();
+			FaceBikeSQL crSQL = new FaceBikeSQL();
 			
-			List list = new LinkedList();
+			//ArrayList<FaceBike> list = crSQL.ReturnTopTen();
 			
-			while(rs.next())
-			{
-				list.add(rs.getString("Full Name"));
-			}
+			//ArrayList<FaceBike> list = crSQL.FindByName("ab");
+			
+			//ArrayList<FaceBike> list = crSQL.FindByDepartment("HR");
+			
+			//ArrayList<FaceBike> list = crSQL.FindByEmail("Moshe_Gorczany@verna.org");
+			
+			ArrayList<FaceBike> list = crSQL.FindByID(100);
 			
 		
 			request.setAttribute("list", list);
