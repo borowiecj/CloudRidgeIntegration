@@ -11,7 +11,9 @@ public class ConfigurationValues
 	{
 		connectionUrl,
 		username,
-		password
+		password,
+		table,
+		database
 	}
 	
 	public static String GetConfigurationString(ConnectionType cType, ConfigValues configValue) throws Exception
@@ -31,6 +33,14 @@ public class ConfigurationValues
 				
 			case password :
 				cValue = "password";
+				break;
+				
+			case table :
+				cValue = "table";
+				break;
+				
+			case database :
+				cValue = "database";
 				break;
 				
 			default:

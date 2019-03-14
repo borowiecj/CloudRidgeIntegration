@@ -17,8 +17,9 @@ public class FaceBikeSQL {
 	private Connection conn = null;
 	private String inputFile = "facebikeConfiguration.config";
 	InputStream in;
-	private String table = "sample_data";
-	private String sqlSelectSuffix = "Select * FROM [employees].[dbo].[" + table + "]";
+	private String database = null;
+	private String table = null;
+	private String sqlSelectSuffix = null;
 	
 	public FaceBikeSQL() throws Exception
 	{
@@ -37,9 +38,16 @@ public class FaceBikeSQL {
 				String dbURL = faceBikeConfig.getProperty(ConfigurationValues.GetConfigurationString(cType, ConfigValues.connectionUrl));
 				String dbUserName = faceBikeConfig.getProperty(ConfigurationValues.GetConfigurationString(cType, ConfigValues.username));
 				String dbUserPassword = faceBikeConfig.getProperty(ConfigurationValues.GetConfigurationString(cType, ConfigValues.password));
-
+				
+				database = faceBikeConfig.getProperty(ConfigurationValues.GetConfigurationString(cType, ConfigValues.database));
+				table = faceBikeConfig.getProperty(ConfigurationValues.GetConfigurationString(cType, ConfigValues.table));
+				sqlSelectSuffix = "Select * FROM [" + table + "]";
+				
+				//Create full database url by appending the database
+				String fullConnectionString = dbURL + ";databaseName=" + database;
+				
 				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-				this.conn = DriverManager.getConnection(dbURL, dbUserName, dbUserPassword);
+				this.conn = DriverManager.getConnection(fullConnectionString, dbUserName, dbUserPassword);
 				if (this.conn != null) {
 				    System.out.println("Connected");
 				}
@@ -184,7 +192,7 @@ public class FaceBikeSQL {
 
  	public void UpdateName(String fullName, int id) throws Exception
  	{
-		   String sql = "UPDATE sample_data SET Full Name = ? WHERE Id = id";
+		   String sql = "UPDATE " + table + " SET \"Full Name\" = ? WHERE Id = ?";
 		   
 		   PreparedStatement pst = conn.prepareStatement(sql);
  		
@@ -205,9 +213,33 @@ public class FaceBikeSQL {
  		}
  	}
 
+ 	public void UpdateDepartment(String department, int id) throws Exception
+ 	{
+		   String sql = "UPDATE " + table + " SET Department = ? WHERE Id = ?";
+		   
+		   PreparedStatement pst = conn.prepareStatement(sql);
+ 		
+ 		try
+ 		{
+ 		   pst.setString(1, department);
+ 		   pst.setInt(2, id);
+
+ 	       pst.executeUpdate();
+ 	    }
+	    catch(Exception ex)
+ 		{
+	    	ex.printStackTrace();
+ 		}
+ 		finally
+ 		{
+ 			pst.close();
+ 		}
+ 	}
+
+ 	
  	public void InsertItem(FaceBike entry) throws Exception
  	{
- 		String sql = "INSERT INTO sample_data ("
+ 		String sql = "INSERT INTO " + database + " ("
  	           + "([Salary],"
  	           + "[Full Name],"
  	           + "[Country],"

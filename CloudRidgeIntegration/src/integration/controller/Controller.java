@@ -37,12 +37,9 @@ public class Controller extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try
 		{
-			PrintWriter out = response.getWriter();
-			out.write("<html><head><title>Testing</title></head></html>");
-			
 			FaceBikeSQL crSQL = new FaceBikeSQL();
 			
-			//ArrayList<FaceBike> list = crSQL.ReturnTopTen();
+			ArrayList<FaceBike> list = crSQL.ReturnTopTen();
 			
 			//ArrayList<FaceBike> list = crSQL.FindByName("ab");
 			
@@ -50,8 +47,11 @@ public class Controller extends HttpServlet {
 			
 			//ArrayList<FaceBike> list = crSQL.FindByEmail("Moshe_Gorczany@verna.org");
 			
-			ArrayList<FaceBike> list = crSQL.FindByID(100);
+			//ArrayList<FaceBike> list = crSQL.FindByID(100);
 			
+			//Test Update
+			crSQL.UpdateName("Bob Jenkins", 0);
+			crSQL.UpdateDepartment("HR2", 0);
 		
 			request.setAttribute("list", list);
 			request.getRequestDispatcher("/WEB-INF/ViewFaceBike.jsp").forward(request, response);
