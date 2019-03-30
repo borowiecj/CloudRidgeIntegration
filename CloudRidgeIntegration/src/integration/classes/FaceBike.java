@@ -12,7 +12,7 @@ public class FaceBike implements java.io.Serializable {
 	private double salary;
 	private String country;
 	private String createdAt;
-	
+	private String dateOfHire;
 	
 
 	public String getName() {
@@ -70,5 +70,13 @@ public class FaceBike implements java.io.Serializable {
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
 	}  
+	
+	public String getDateOfHire() {
+		return createdAt;
+	}
+
+	public void setDateOfHire(String dateOfHire) {
+		this.dateOfHire = dateOfHire;
+	} 
 
 }

@@ -11,6 +11,8 @@ import java.util.Properties;
 
 import integration.classes.ConfigurationValues.ConfigValues;
 import integration.classes.ConfigurationValues.ConnectionType;
+import sql.classes.SQLBase;
+import sql.classes.SQLServerBase;
 
 public class FaceBikeSQL {
 	
@@ -41,16 +43,13 @@ public class FaceBikeSQL {
 				
 				database = faceBikeConfig.getProperty(ConfigurationValues.GetConfigurationString(cType, ConfigValues.database));
 				table = faceBikeConfig.getProperty(ConfigurationValues.GetConfigurationString(cType, ConfigValues.table));
-				sqlSelectSuffix = "Select * FROM [" + table + "]";
 				
 				//Create full database url by appending the database
 				String fullConnectionString = dbURL + ";databaseName=" + database;
-				
-				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-				this.conn = DriverManager.getConnection(fullConnectionString, dbUserName, dbUserPassword);
-				if (this.conn != null) {
-				    System.out.println("Connected");
-				}
+				String className = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+				this.conn = SQLBase.ConnectToDatabase(className, fullConnectionString, dbUserName, dbUserPassword);
+
+				System.out.println("Connected to FaceBike");
 		  }
 		  catch(Exception ex)
 		  {
@@ -62,7 +61,7 @@ public class FaceBikeSQL {
 		  }
 	}
 	
-	  public ArrayList<FaceBike> CreateArray(ResultSet rs) throws Exception
+	public ArrayList<FaceBike> CreateArray(ResultSet rs) throws Exception
 	  {
 			ArrayList<FaceBike> list = new ArrayList<FaceBike>();
 			
@@ -70,14 +69,13 @@ public class FaceBikeSQL {
 			{
 				FaceBike data = new FaceBike();
 				
-				String name = rs.getString("Full Name");
-				String email = rs.getString("Email");
-				int id = rs.getInt("Id");
-
-				data.setName(name);
-				data.setEmail(email);
-				data.setId(id);
+				data.setName(rs.getString("Full Name"));
+				data.setEmail(rs.getString("Email"));
+				data.setId(rs.getInt("Id"));
 				data.setDepartment(rs.getString("Department"));
+				data.setDateOfHire(rs.getString("DateofHire"));
+				data.setCountry(rs.getString("Country"));
+				data.setSalary(rs.getInt("Salary"));
 				
 				list.add(data);
 			}
@@ -89,14 +87,7 @@ public class FaceBikeSQL {
 	  {
 		  try
 		  {
-			   String sql = sqlSelectSuffix.replace("* FROM", "top 10 * FROM");
-			   
-			   PreparedStatement pst = conn.prepareStatement(sql);
-			   
-			   ResultSet rs = pst.executeQuery();
-			   
-			   return CreateArray(rs);
-				
+			  return CreateArray(SQLServerBase.ReturnTopX(this.conn, 10, table));
 		  }
 		  catch(Exception ex)
 		  {
@@ -109,15 +100,8 @@ public class FaceBikeSQL {
 	  {
 		  try
 		  {
-			   String sql = sqlSelectSuffix + "Where \"Full Name\" like ?";
-			   
-			   PreparedStatement pst = conn.prepareStatement(sql);
-			   pst.setString(1, "%" + nameToFind + "%");
-			   
-			   ResultSet rs = pst.executeQuery();
-				
-			   return CreateArray(rs);
-	
+			  return CreateArray(SQLServerBase.FindByX(this.conn, table, "Full Name", nameToFind, false));
+
 		  }
 		  catch(Exception ex)
 		  {
@@ -130,16 +114,7 @@ public class FaceBikeSQL {
 	  {
 		  try
 		  {
-  
-			   String sql = sqlSelectSuffix + "Where Id = ?";
-			   
-			   PreparedStatement pst = conn.prepareStatement(sql);
-			   pst.setInt(1, id);
-			   
-			   ResultSet rs = pst.executeQuery();
-				
-			   return CreateArray(rs);
-	
+			  return CreateArray(SQLServerBase.FindByX(this.conn, table, "Id", id, false));
 		  }
 		  catch(Exception ex)
 		  {
@@ -152,15 +127,7 @@ public class FaceBikeSQL {
 	  {
 		  try
 		  {
-			   String sql = sqlSelectSuffix + "Where Email = ?";
-			   
-			   PreparedStatement pst = conn.prepareStatement(sql);
-			   pst.setString(1, email);
-			   
-			   ResultSet rs = pst.executeQuery();
-				
-			   return CreateArray(rs);
-	
+			  return CreateArray(SQLServerBase.FindByX(this.conn, table, "Email", email, false));
 		  }
 		  catch(Exception ex)
 		  {
@@ -173,15 +140,7 @@ public class FaceBikeSQL {
 	  {
 		  try
 		  {
-			  String sql = sqlSelectSuffix + "Where Department like ?";
-			   
-			   PreparedStatement pst = conn.prepareStatement(sql);
-			   pst.setString(1, "%" + department + "%");
-			   
-			   ResultSet rs = pst.executeQuery();
-				
-			   return CreateArray(rs);
-	
+			  return CreateArray(SQLServerBase.FindByX(this.conn, table, "Department", department, false));
 		  }
 		  catch(Exception ex)
 		  {
@@ -190,6 +149,8 @@ public class FaceBikeSQL {
 		  }
 	  }
 
+ 	
+ 	
  	public void UpdateName(String fullName, int id) throws Exception
  	{
 		   String sql = "UPDATE " + table + " SET \"Full Name\" = ? WHERE Id = ?";
@@ -245,8 +206,9 @@ public class FaceBikeSQL {
  	           + "[Country],"
  	           +"[Created At],"
  	           +"[Department],"
- 	           + "[Email])"
- 	           + "VALUES(?,?,?,?,?,?)";
+ 	           + "[Email]),"
+ 	           + "[DateofHire]),"
+ 	           + "VALUES(?,?,?,?,?,?,?)";
  		
  		PreparedStatement pst = conn.prepareStatement(sql);
  		
@@ -258,6 +220,7 @@ public class FaceBikeSQL {
  		   pst.setString(4,  entry.getCreatedAt());
  		   pst.setString(5, entry.getDepartment());
  		   pst.setString(6, entry.getEmail());
+ 		   pst.setString(7, entry.getDateOfHire());
 
  		   pst.executeUpdate();
  	    }
