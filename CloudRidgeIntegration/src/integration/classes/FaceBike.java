@@ -1,4 +1,6 @@
 package integration.classes;
+import java.util.ArrayList;
+
 import javax.persistence.*;  
 
  
@@ -13,6 +15,10 @@ public class FaceBike implements java.io.Serializable {
 	private String country;
 	private String createdAt;
 	private String dateOfHire;
+	
+	//Non SQL 
+	private String FirstName;
+	private String LastName;
 	
 
 	public String getName() {
@@ -78,5 +84,27 @@ public class FaceBike implements java.io.Serializable {
 	public void setDateOfHire(String dateOfHire) {
 		this.dateOfHire = dateOfHire;
 	} 
+	
+	public String getFirstName()
+	{
+		if(!this.name.equals(null)) 
+		{ 
+			return this.name.split(" ")[0];
+		}
+		
+		return null;
+	}
+	
+	public String getLastName()
+	{
+		if(!this.name.equals(null)) 
+		{ 
+			String[] nameSplit = this.name.split(" ");
+			
+			return nameSplit[nameSplit.length - 1];
+		}
+		
+		return null;
+	}
 
 }

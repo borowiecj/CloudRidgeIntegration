@@ -17,6 +17,9 @@ public class WhosApp implements java.io.Serializable {
 	private int salary;
 	private String hire_date;
 	
+	//Non SQL
+	private String fullName;
+	
 	public String getFirst_name() {
 		return first_name;
 	}
@@ -85,4 +88,16 @@ public class WhosApp implements java.io.Serializable {
 		salary = salary;
 	}
 
+	public String getFullName() 
+	{
+		String s = this.first_name;
+		
+		if(!this.last_name.equals(null))
+		{
+			s.concat(" ");
+			s.concat(this.last_name);
+		}
+		
+		return s;
+	}
 }
