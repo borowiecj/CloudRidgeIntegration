@@ -1,0 +1,1 @@
+Cloud Ridge Integration Project Sample read me file.
