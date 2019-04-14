@@ -22,6 +22,8 @@ public class TransferTo
 
 				//We should really confirm the use does not exist prior and do a lot more prechecks
 				FaceBikeSQL.InsertItem(fbUser);
+				
+				success= true;
 		  }
 		  catch(Exception ex)
 		  {
@@ -49,6 +51,8 @@ public class TransferTo
 			  	whosAppUser.setState(user.getCountry());
 				//We should really confirm the use does not exist prior and do a lot more prechecks
 			   	WhosAppSQL.InsertItem(whosAppUser);
+			   	
+				success= true;
 		  }
 		  catch(Exception ex)
 		  {
