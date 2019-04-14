@@ -17,12 +17,12 @@ import sql.classes.SQLServerBase;
 
 public class WhosAppSQL {
 	
-	private Connection conn = null;
-	private String inputFile = "whosAppConfiguration.config";
+	private static Connection conn = null;
+	private static String inputFile = "whosAppConfiguration.config";
 	InputStream in;
-	private String database = null;
-	private String table = null;
-	private String sqlSelectSuffix = null;
+	private static String database = null;
+	private static String table = null;
+	private static String sqlSelectSuffix = null;
 	
 	public WhosAppSQL() throws Exception
 	{
@@ -64,7 +64,7 @@ public class WhosAppSQL {
 		  }
 	}
 	
-	  public ArrayList<WhosApp> CreateArray(ResultSet rs) throws Exception
+	  public static ArrayList<WhosApp> CreateArray(ResultSet rs) throws Exception
 	  {
 			ArrayList<WhosApp> list = new ArrayList<WhosApp>();
 			
@@ -86,11 +86,11 @@ public class WhosAppSQL {
 			return list;
 	  }
 	
- 	public ArrayList<WhosApp> ReturnTopTen() throws Exception
+ 	public static ArrayList<WhosApp> ReturnTopTen() throws Exception
 	  {
 		  try
 		  {
-			  return CreateArray(MySQLServerBase.ReturnTopX(this.conn, 10, table));
+			  return CreateArray(MySQLServerBase.ReturnTopX(conn, 10, table));
 			
 		  }
 		  catch(Exception ex)
@@ -100,11 +100,11 @@ public class WhosAppSQL {
 		  }
 	  }
 
- 	public ArrayList<WhosApp> FindByFirstName(String nameToFind) throws Exception
+ 	public static ArrayList<WhosApp> FindByFirstName(String nameToFind) throws Exception
 	  {
 		  try
 		  {
-			  return CreateArray(MySQLServerBase.FindByX(this.conn, table, "first_name", nameToFind, false));
+			  return CreateArray(MySQLServerBase.FindByX(conn, table, "first_name", nameToFind, false));
 	
 		  }
 		  catch(Exception ex)
@@ -114,11 +114,11 @@ public class WhosAppSQL {
 		  }
 	  }
  	
- 	public ArrayList<WhosApp> FindByLastName(String nameToFind) throws Exception
+ 	public static ArrayList<WhosApp> FindByLastName(String nameToFind) throws Exception
 	  {
 		  try
 		  {
-			  return CreateArray(MySQLServerBase.FindByX(this.conn, table, "last_name", nameToFind, false));
+			  return CreateArray(MySQLServerBase.FindByX(conn, table, "last_name", nameToFind, false));
 	
 		  }
 		  catch(Exception ex)
@@ -128,11 +128,11 @@ public class WhosAppSQL {
 		  }
 	  }
 
- 	public ArrayList<WhosApp> FindByID(int id) throws Exception
+ 	public static ArrayList<WhosApp> FindByID(int id) throws Exception
 	  {
 		  try
 		  {
-			  return CreateArray(MySQLServerBase.FindByX(this.conn, table, "employee_id", id, false));
+			  return CreateArray(MySQLServerBase.FindByX(conn, table, "employee_id", id, false));
 	
 		  }
 		  catch(Exception ex)
@@ -142,11 +142,11 @@ public class WhosAppSQL {
 		  }
 	  }
 
- 	public ArrayList<WhosApp> FindByState(String state) throws Exception
+ 	public static ArrayList<WhosApp> FindByState(String state) throws Exception
 	  {
 		  try
 		  {
-			  return CreateArray(MySQLServerBase.FindByX(this.conn, table, "state", state, false));
+			  return CreateArray(MySQLServerBase.FindByX(conn, table, "state", state, false));
 		  }
 		  catch(Exception ex)
 		  {
@@ -155,11 +155,11 @@ public class WhosAppSQL {
 		  }
 	  }
 
- 	public ArrayList<WhosApp> FindByDepartment(String department) throws Exception
+ 	public static ArrayList<WhosApp> FindByDepartment(String department) throws Exception
 	  {
 		  try
 		  {
-			  return CreateArray(MySQLServerBase.FindByX(this.conn, table, "department_name", department, true));
+			  return CreateArray(MySQLServerBase.FindByX(conn, table, "department_name", department, true));
 	
 		  }
 		  catch(Exception ex)
@@ -169,7 +169,7 @@ public class WhosAppSQL {
 		  }
 	  }
 	
- 	public void InsertItem(WhosApp entry) throws Exception
+ 	public static void InsertItem(WhosApp entry) throws Exception
  	{
  		String sql =  "INSERT INTO " + database + "("
  		+ "state"

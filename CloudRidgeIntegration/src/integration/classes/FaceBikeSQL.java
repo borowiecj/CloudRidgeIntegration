@@ -16,12 +16,12 @@ import sql.classes.SQLServerBase;
 
 public class FaceBikeSQL {
 	
-	private Connection conn = null;
-	private String inputFile = "facebikeConfiguration.config";
+	private static Connection conn = null;
+	private static String inputFile = "facebikeConfiguration.config";
 	InputStream in;
-	private String database = null;
-	private String table = null;
-	private String sqlSelectSuffix = null;
+	private static String database = null;
+	private static String table = null;
+	private static String sqlSelectSuffix = null;
 	
 	public FaceBikeSQL() throws Exception
 	{
@@ -47,7 +47,7 @@ public class FaceBikeSQL {
 				//Create full database url by appending the database
 				String fullConnectionString = dbURL + ";databaseName=" + database;
 				String className = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-				this.conn = SQLBase.ConnectToDatabase(className, fullConnectionString, dbUserName, dbUserPassword);
+				conn = SQLBase.ConnectToDatabase(className, fullConnectionString, dbUserName, dbUserPassword);
 
 				System.out.println("Connected to FaceBike");
 		  }
@@ -61,7 +61,7 @@ public class FaceBikeSQL {
 		  }
 	}
 	
-	public ArrayList<FaceBike> CreateArray(ResultSet rs) throws Exception
+	public static ArrayList<FaceBike> CreateArray(ResultSet rs) throws Exception
 	  {
 			ArrayList<FaceBike> list = new ArrayList<FaceBike>();
 			
@@ -83,11 +83,11 @@ public class FaceBikeSQL {
 			return list;
 	  }
 	
- 	public ArrayList<FaceBike> ReturnTopTen() throws Exception
+ 	public static ArrayList<FaceBike> ReturnTopTen() throws Exception
 	  {
 		  try
 		  {
-			  return CreateArray(SQLServerBase.ReturnTopX(this.conn, 10, table));
+			  return CreateArray(SQLServerBase.ReturnTopX(conn, 10, table));
 		  }
 		  catch(Exception ex)
 		  {
@@ -96,11 +96,11 @@ public class FaceBikeSQL {
 		  }
 	  }
 
- 	public ArrayList<FaceBike> FindByName(String nameToFind) throws Exception
+ 	public static ArrayList<FaceBike> FindByName(String nameToFind) throws Exception
 	  {
 		  try
 		  {
-			  return CreateArray(SQLServerBase.FindByX(this.conn, table, "Full Name", nameToFind, false));
+			  return CreateArray(SQLServerBase.FindByX(conn, table, "Full Name", nameToFind, false));
 
 		  }
 		  catch(Exception ex)
@@ -110,11 +110,11 @@ public class FaceBikeSQL {
 		  }
 	  }
 
- 	public ArrayList<FaceBike> FindByID(int id) throws Exception
+ 	public static ArrayList<FaceBike> FindByID(int id) throws Exception
 	  {
 		  try
 		  {
-			  return CreateArray(SQLServerBase.FindByX(this.conn, table, "Id", id, false));
+			  return CreateArray(SQLServerBase.FindByX(conn, table, "Id", id, false));
 		  }
 		  catch(Exception ex)
 		  {
@@ -123,11 +123,11 @@ public class FaceBikeSQL {
 		  }
 	  }
 
- 	public ArrayList<FaceBike> FindByEmail(String email) throws Exception
+ 	public static ArrayList<FaceBike> FindByEmail(String email) throws Exception
 	  {
 		  try
 		  {
-			  return CreateArray(SQLServerBase.FindByX(this.conn, table, "Email", email, false));
+			  return CreateArray(SQLServerBase.FindByX(conn, table, "Email", email, false));
 		  }
 		  catch(Exception ex)
 		  {
@@ -136,11 +136,11 @@ public class FaceBikeSQL {
 		  }
 	  }
 
- 	public ArrayList<FaceBike> FindByDepartment(String department) throws Exception
+ 	public static ArrayList<FaceBike> FindByDepartment(String department) throws Exception
 	  {
 		  try
 		  {
-			  return CreateArray(SQLServerBase.FindByX(this.conn, table, "Department", department, false));
+			  return CreateArray(SQLServerBase.FindByX(conn, table, "Department", department, false));
 		  }
 		  catch(Exception ex)
 		  {
@@ -151,7 +151,7 @@ public class FaceBikeSQL {
 
  	
  	
- 	public void UpdateName(String fullName, int id) throws Exception
+ 	public static void UpdateName(String fullName, int id) throws Exception
  	{
 		   String sql = "UPDATE " + table + " SET \"Full Name\" = ? WHERE Id = ?";
 		   
@@ -174,7 +174,7 @@ public class FaceBikeSQL {
  		}
  	}
 
- 	public void UpdateDepartment(String department, int id) throws Exception
+ 	public static void UpdateDepartment(String department, int id) throws Exception
  	{
 		   String sql = "UPDATE " + table + " SET Department = ? WHERE Id = ?";
 		   
@@ -198,7 +198,7 @@ public class FaceBikeSQL {
  	}
 
  	
- 	public void InsertItem(FaceBike entry) throws Exception
+ 	public static void InsertItem(FaceBike entry) throws Exception
  	{
  		String sql = "INSERT INTO " + database + " ("
  	           + "([Salary],"
